@@ -1,5 +1,8 @@
 # Put some miscellaneous rules here
 
+KOWGAPPS = "vendor/gapps"
+TARGET_CUSTOM_BUILDTOOL :=$(KOWGAPPS)/squisher
+
 # Pick a reasonable string to use to identify files.
 ifneq "" "$(filter eng.%,$(BUILD_NUMBER))"
   # BUILD_NUMBER has a timestamp in it, which means that
@@ -1299,6 +1302,11 @@ $(INTERNAL_OTA_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(DISTTOOLS)
 	   -p $(HOST_OUT) \
 	   -k $(KEY_CERT_PAIR) \
 	   $(BUILT_TARGET_FILES_PACKAGE) $@
+
+  @echo "---------- Running kow's release tool ----------"
+  @chmod a+x $(KOWGAPPS)/squisher
+  $(hide) $(TARGET_CUSTOM_BUILDTOOL)
+  @echo "---------- Finished kow's release tool ----------"
 
 .PHONY: otapackage
 otapackage: $(INTERNAL_OTA_PACKAGE_TARGET)
